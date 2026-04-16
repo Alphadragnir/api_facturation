@@ -1,0 +1,41 @@
+{% extends "facturation/base.html" %}
+{% block title %}Historique{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Historique des modifications</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Modèle</th>
+                <th>Objet</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in page_obj %}
+            <tr>
+                <td><span style="background: #ecf0f1; padding: 0.25rem 0.5rem; border-radius: 4px;">{{ log.get_action_display }}</span></td>
+                <td>{{ log.model_name }}</td>
+                <td>{{ log.object_repr }}</td>
+                <td>{{ log.timestamp|date:"d/m/Y H:i:s" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align: center;">Aucun historique</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">Première</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Précédente</a>
+        {% endif %}
+        <span class="current">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

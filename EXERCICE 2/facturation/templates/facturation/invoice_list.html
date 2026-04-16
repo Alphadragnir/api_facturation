@@ -1,0 +1,47 @@
+{% extends "facturation/base.html" %}
+{% block title %}Factures{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Gestion des Factures</h1>
+    <a href="{% url 'invoice_create' %}" class="btn btn-success">Créer une facture</a>
+    <table style="margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in page_obj %}
+            <tr>
+                <td>#{{ invoice.id }}</td>
+                <td>{{ invoice.created_at|date:"d/m/Y H:i" }}</td>
+                <td>{{ invoice.total }}€</td>
+                <td>
+                    <a href="{% url 'invoice_detail' invoice.id %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Voir</a>
+                    <form method="post" action="{% url 'invoice_delete' invoice.id %}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align: center;">Aucune facture</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">Première</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Précédente</a>
+        {% endif %}
+        <span class="current">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

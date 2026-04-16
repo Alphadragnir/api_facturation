@@ -1,0 +1,65 @@
+{% extends "facturation/base.html" %}
+{% block title %}Filtrer les factures{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Filtrer les factures</h1>
+    <form method="get" style="margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div class="form-group">
+                <label>Date de début</label>
+                <input type="date" name="start_date" value="{{ start_date }}">
+            </div>
+            <div class="form-group">
+                <label>Date de fin</label>
+                <input type="date" name="end_date" value="{{ end_date }}">
+            </div>
+            <div class="form-group">
+                <label>Montant minimum</label>
+                <input type="number" name="min_amount" step="0.01" value="{{ min_amount }}" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>Montant maximum</label>
+                <input type="number" name="max_amount" step="0.01" value="{{ max_amount }}" placeholder="9999.99">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Filtrer</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in page_obj %}
+            <tr>
+                <td>#{{ invoice.id }}</td>
+                <td>{{ invoice.created_at|date:"d/m/Y H:i" }}</td>
+                <td>{{ invoice.total }}€</td>
+                <td>
+                    <a href="{% url 'invoice_detail' invoice.id %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Voir</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align: center;">Aucune facture</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">Première</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Précédente</a>
+        {% endif %}
+        <span class="current">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

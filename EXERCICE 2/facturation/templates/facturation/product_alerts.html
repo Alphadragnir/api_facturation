@@ -1,0 +1,48 @@
+{% extends "facturation/base.html" %}
+{% block title %}Alertes produits{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Alertes produits</h1>
+    {% if alerts %}
+    <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+        <p style="color: #856404;"><strong>{{ alerts.count }}</strong> alerte(s) non lue(s)</p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Type</th>
+                <th>Date de péremption</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alert in alerts %}
+            <tr>
+                <td>{{ alert.product.name }}</td>
+                <td>
+                    {% if alert.alert_type == 'EXPIRED' %}
+                        <span style="background: #f8d7da; color: #721c24; padding: 0.25rem 0.5rem; border-radius: 4px;">Expiré</span>
+                    {% else %}
+                        <span style="background: #fff3cd; color: #856404; padding: 0.25rem 0.5rem; border-radius: 4px;">Expiration proche</span>
+                    {% endif %}
+                </td>
+                <td>{{ alert.product.expiration_date }}</td>
+                <td>
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="alert_id" value="{{ alert.id }}">
+                        <button type="submit" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Marquer comme lu</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="background: #d4edda; border: 1px solid #28a745; padding: 1rem; border-radius: 8px; text-align: center;">
+        <p style="color: #155724;">✓ Aucune alerte</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

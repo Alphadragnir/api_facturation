@@ -1,0 +1,42 @@
+{% extends "facturation/base.html" %}
+{% block title %}Facture #{{ invoice.id }}{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Facture N°{{ invoice.id }}</h1>
+    <p><strong>Date:</strong> {{ invoice.created_at|date:"d/m/Y H:i" }}</p>
+    
+    <table style="margin-top: 2rem;">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Sous-total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit_price }}€</td>
+                <td>{{ item.get_subtotal }}€</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 2rem; text-align: right;">
+        <p><strong>Nombre total de produits:</strong> {{ total_quantity }}</p>
+        <p style="font-size: 1.2rem; color: #27ae60;"><strong>Total à payer: {{ invoice.total }}€</strong></p>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'invoice_list' %}" class="btn">Retour</a>
+        <form method="post" action="{% url 'invoice_delete' invoice.id %}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "facturation/base.html" %}
+{% block title %}Tableau de bord analytique{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Tableau de bord analytique</h1>
+    
+    <h2>Statistiques globales</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #3498db;">{{ total_products }}</h3>
+            <p>Produits</p>
+        </div>
+        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #27ae60;">{{ total_invoices }}</h3>
+            <p>Factures</p>
+        </div>
+        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #e74c3c;">{{ total_revenue }}€</h3>
+            <p>Revenu total</p>
+        </div>
+    </div>
+    
+    <h2>Statistiques du mois</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: #d4edda; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #155724;">{{ month_invoices }}</h3>
+            <p>Factures ce mois</p>
+        </div>
+        <div style="background: #d4edda; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #155724;">{{ month_revenue }}€</h3>
+            <p>Revenu ce mois</p>
+        </div>
+        <div style="background: #f8d7da; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #721c24;">{{ expired_products }}</h3>
+            <p>Produits expirés</p>
+        </div>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'sales_report' %}" class="btn btn-success">Voir rapport détaillé</a>
+        <a href="{% url 'product_alerts' %}" class="btn btn-success">Voir alertes</a>
+    </div>
+</div>
+{% endblock %}

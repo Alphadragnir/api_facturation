@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Impression Facture #{{ invoice.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        h1 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #ecf0f1; font-weight: bold; }
+        .total { text-align: right; font-size: 1.2em; font-weight: bold; color: #27ae60; margin-top: 20px; }
+        @media print { body { margin: 0; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Facture N°{{ invoice.id }}</h1>
+        <p>Date: {{ invoice.created_at|date:"d/m/Y H:i" }}</p>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Sous-total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit_price }}€</td>
+                <td>{{ item.get_subtotal }}€</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="total">
+        <p>Nombre total de produits: {{ total_quantity }}</p>
+        <p>Total à payer: {{ invoice.total }}€</p>
+    </div>
+    
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

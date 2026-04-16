@@ -1,0 +1,52 @@
+{% extends "facturation/base.html" %}
+{% block title %}Rechercher des produits{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Rechercher des produits</h1>
+    <form method="get" style="margin-bottom: 1rem;">
+        <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un produit..." style="width: 300px; padding: 0.75rem;">
+        <button type="submit" class="btn">Rechercher</button>
+    </form>
+    
+    {% if query %}
+        <p>Résultats pour: <strong>{{ query }}</strong></p>
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Date de péremption</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in page_obj %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}€</td>
+                <td>{{ product.expiration_date }}</td>
+                <td>
+                    <a href="{% url 'product_update' product.id %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Modifier</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align: center;">Aucun résultat</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&page=1">Première</a>
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Précédente</a>
+        {% endif %}
+        <span class="current">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">Suivante</a>
+            <a href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">Dernière</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

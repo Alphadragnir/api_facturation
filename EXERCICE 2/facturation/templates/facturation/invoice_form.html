@@ -1,0 +1,36 @@
+{% extends "facturation/base.html" %}
+{% block title %}Créer une facture{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Créer une facture</h1>
+    <form method="post">
+        {% csrf_token %}
+        <table style="margin-top: 1rem;">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}€</td>
+                    <td>
+                        <input type="number" name="quantity_{{ product.id }}" min="0" value="0" style="width: 100px;">
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" style="text-align: center;">Aucun produit disponible</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-success">Créer la facture</button>
+            <a href="{% url 'invoice_list' %}" class="btn">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

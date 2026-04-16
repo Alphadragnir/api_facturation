@@ -1,0 +1,58 @@
+{% extends "facturation/base.html" %}
+{% block title %}Rapport de ventes{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Rapport de ventes</h1>
+    
+    <form method="get" style="margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div class="form-group">
+                <label>Date de début</label>
+                <input type="date" name="start_date" value="{{ start_date }}">
+            </div>
+            <div class="form-group">
+                <label>Date de fin</label>
+                <input type="date" name="end_date" value="{{ end_date }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Générer</button>
+    </form>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #3498db;">{{ report.total_invoices }}</h3>
+            <p>Factures</p>
+        </div>
+        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #27ae60;">{{ report.total_revenue }}€</h3>
+            <p>Revenu total</p>
+        </div>
+        <div style="background: #ecf0f1; padding: 1.5rem; border-radius: 8px; text-align: center;">
+            <h3 style="color: #e74c3c;">{{ report.average_invoice|floatformat:2 }}€</h3>
+            <p>Moyenne par facture</p>
+        </div>
+    </div>
+    
+    <h2>Détail des factures</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Date</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in report.invoices %}
+            <tr>
+                <td>#{{ invoice.id }}</td>
+                <td>{{ invoice.created_at|date:"d/m/Y H:i" }}</td>
+                <td>{{ invoice.total }}€</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align: center;">Aucune facture</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
